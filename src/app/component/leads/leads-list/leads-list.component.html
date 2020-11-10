@@ -1,0 +1,296 @@
+<mat-sidenav-container>
+	<mat-sidenav-content>
+		<div class="section">
+			<header>
+				<div class="row">
+					<h1>
+						<span>Leads</span>
+						<div class="total-leads">{{ totalLeadsNum || '0' }} Leads</div>
+					</h1>
+					<div class="crt-btn">
+						<button mat-button (click)="openAddSidenav()">Create lead</button>
+					</div>
+				</div>
+				<div class="row">
+					<div id="nav-item">
+						<span class="material-icons"> import_contacts </span>
+						<span>All leads</span>
+					</div>
+				</div>
+			</header>
+		</div>
+		<div class="table">
+			<div class="table-toolbar">
+				<div class="table-toolbar-section">
+					<mat-form-field>
+						<mat-label>Search</mat-label>
+						<input matInput (keyup)="applyFilter($event)" #input />
+					</mat-form-field>
+					<div
+						matTooltip="You must select at least 1 lead"
+						matTooltipPosition="above"
+						[matTooltipDisabled]="selection.hasValue()"
+					>
+						<button mat-button class="del-btn" (click)="delLeads()" [disabled]="!selection.hasValue()">
+							Delete selected leads
+						</button>
+					</div>
+				</div>
+				<div>
+					<button mat-button class="edit-column-btn" [routerLink]="['/fields']">Edit columns</button>
+				</div>
+			</div>
+			<div class="container">
+				<div class="loading-shade" *ngIf="isLoadingResults">
+					<mat-spinner *ngIf="isLoadingResults" [diameter]="50" color="accent"></mat-spinner>
+				</div>
+				<table
+					mat-table
+					[dataSource]="dataSource"
+					matSort
+					cdkDropList
+					cdkDropListLockAxis="x"
+					cdkDropListOrientation="horizontal"
+					(cdkDropListDropped)="drop($event)"
+				>
+					<ng-container matColumnDef="select">
+						<th mat-header-cell *matHeaderCellDef cdkDrag class="cdk-drag-disabled">
+							<mat-checkbox
+								(change)="masterToggle()"
+								[checked]="selection.hasValue() && isAllSelected()"
+								[indeterminate]="selection.hasValue() && !isAllSelected()"
+							>
+							</mat-checkbox>
+							<span cdkDragHandle></span>
+						</th>
+						<td mat-cell *matCellDef="let row">
+							<mat-checkbox
+								(click)="$event.stopPropagation()"
+								(change)="selection.toggle(row)"
+								[checked]="selection.isSelected(row)"
+							>
+							</mat-checkbox>
+						</td>
+					</ng-container>
+
+					<ng-container matColumnDef="edit-btn">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons edit-icon">edit</span>
+							<span cdkDragHandle></span>
+						</th>
+						<td mat-cell *matCellDef="let row">
+							<button mat-button class="edit-btn" (click)="openEditSidenav(row)">
+								<span class="material-icons edit-icon">edit</span>
+							</button>
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="firstName">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span>
+							<span mat-sort-header="firstName"> First Name </span>
+						</th>
+						<td
+							mat-cell
+							*matCellDef="let row"
+							[matTooltip]="row.firstName"
+							appShowIfTruncated
+							matTooltipPosition="above"
+						>
+							{{ row.firstName }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="lastName">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span
+							><span mat-sort-header="lastName">Last name</span>
+						</th>
+						<td
+							mat-cell
+							*matCellDef="let row"
+							[matTooltip]="row.lastName"
+							appShowIfTruncated
+							matTooltipPosition="above"
+						>
+							{{ row.lastName }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="email">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span><span mat-sort-header> Email </span>
+						</th>
+						<td mat-cell *matCellDef="let row" [matTooltip]="row.email" appShowIfTruncated matTooltipPosition="above">
+							<a [href]="'mailto:' + row.email">{{ row.email }}</a>
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="companyName">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span
+							><span mat-sort-header="companyName"> Company Name </span>
+						</th>
+						<td
+							mat-cell
+							*matCellDef="let row"
+							[matTooltip]="row.companyName"
+							appShowIfTruncated
+							matTooltipPosition="above"
+						>
+							{{ row.companyName }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="companySize">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span
+							><span mat-sort-header="companySize"> Size of company </span>
+						</th>
+						<td
+							mat-cell
+							*matCellDef="let row"
+							[matTooltip]="row.companySize"
+							appShowIfTruncated
+							matTooltipPosition="above"
+						>
+							{{ row.companySize }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="website">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span
+							><span mat-sort-header> Website </span>
+						</th>
+						<td mat-cell *matCellDef="let row" [matTooltip]="row.website" appShowIfTruncated matTooltipPosition="above">
+							{{ row.website }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="status">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span><span mat-sort-header> Status </span>
+						</th>
+						<td mat-cell *matCellDef="let row" [matTooltip]="row.status" appShowIfTruncated matTooltipPosition="above">
+							{{ row.status }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="country">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span
+							><span mat-sort-header> Country </span>
+						</th>
+						<td mat-cell *matCellDef="let row" [matTooltip]="row.country" appShowIfTruncated matTooltipPosition="above">
+							{{ row.country }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="industry">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span
+							><span mat-sort-header> Industry </span>
+						</th>
+						<td
+							mat-cell
+							*matCellDef="let row"
+							[matTooltip]="row.industry"
+							appShowIfTruncated
+							matTooltipPosition="above"
+						>
+							{{ row.industry }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="date">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span><span mat-sort-header> Date </span>
+						</th>
+						<td mat-cell *matCellDef="let row">
+							{{ row.date | date: 'dd-MM-yyyy' }}
+						</td>
+					</ng-container>
+					<ng-container matColumnDef="note">
+						<th mat-header-cell cdkDrag *matHeaderCellDef>
+							<span class="material-icons drag" cdkDragHandle>drag_indicator</span><span mat-sort-header> Note </span>
+						</th>
+						<td mat-cell *matCellDef="let row" [matTooltip]="row.note" appShowIfTruncated matTooltipPosition="above">
+							{{ row.note }}
+						</td>
+					</ng-container>
+
+					<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+					<tr mat-row *matRowDef="let row; columns: displayedColumns" class="row"></tr>
+				</table>
+				<div class="nodatarow" *ngIf="totalLeadsNum === 0">No data</div>
+			</div>
+			<mat-paginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+		</div>
+	</mat-sidenav-content>
+	<mat-sidenav #sidenav position="end" class="sidenav" (closed)="clearForm()">
+		<form
+			class="fields"
+			[formGroup]="addForm"
+			(submit)="createOrEditLead(this.addForm.value)"
+			*ngIf="userFields.length !== 0; else NoFields"
+		>
+			<h1 *ngIf="this.addForm.value.id; else Create">Edit lead</h1>
+			<mat-icon class="close" (click)="sidenav.close()">close</mat-icon>
+			<ng-template #Create><h1>Create lead</h1></ng-template>
+
+			<div *ngFor="let item of userFields">
+				<div [ngSwitch]="item.inputType">
+					<ng-template ngSwitchCase="INPUT">
+						<mat-form-field class="form-field" appearance="outline">
+							<mat-label>{{ item.label }}</mat-label>
+							<input matInput [formControlName]="item.field" [type]="item.field" />
+						</mat-form-field>
+						<mat-error *ngIf="addForm.get(item.field).touched && addForm.get(item.field).invalid">
+							<span *ngIf="addForm.get(item.field).errors.required">This field is required.</span>
+							<span *ngIf="addForm.get(item.field).errors[item.field]">{{ item.field | titlecase }} is incorrect</span>
+						</mat-error>
+					</ng-template>
+
+					<ng-template ngSwitchCase="NUMBER_INPUT">
+						<mat-form-field class="form-field" appearance="outline">
+							<mat-label> {{ item.label }} </mat-label>
+							<input matInput [formControlName]="item.field" type="number" />
+						</mat-form-field>
+						<mat-error *ngIf="addForm.get(item.field).touched && addForm.get(item.field).invalid">
+							<span *ngIf="addForm.get(item.field).errors['min']">{{ item.label }} must be greater than 0</span>
+						</mat-error>
+					</ng-template>
+
+					<ng-template ngSwitchCase="TEXTAREA">
+						<mat-form-field class="form-field" appearance="outline">
+							<mat-label> {{ item.label }} </mat-label>
+							<textarea matInput [formControlName]="item.field" cols="10" rows="4"></textarea>
+						</mat-form-field>
+					</ng-template>
+
+					<ng-template ngSwitchCase="SELECT">
+						<mat-form-field appearance="outline">
+							<mat-select [formControlName]="item.field">
+								<mat-option *ngFor="let option of item.options" [value]="option">{{ option }}</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</ng-template>
+
+					<ng-template ngSwitchCase="DATE">
+						<mat-form-field class="form-field" appearance="outline">
+							<mat-label> {{ item.label }} </mat-label>
+							<input matInput [formControlName]="item.field" type="date" />
+						</mat-form-field>
+						<mat-error *ngIf="addForm.get(item.field).touched && addForm.get(item.field).invalid">
+							<span *ngIf="addForm.get(item.field).errors.required">This field is required.</span>
+							<span *ngIf="addForm.get(item.field).errors.Date"
+								>Chosen {{ item.label }} is bigger than current date</span
+							>
+						</mat-error>
+					</ng-template>
+				</div>
+			</div>
+			<button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="addForm.invalid">
+				Save
+			</button>
+		</form>
+
+		<ng-template #NoFields>
+			<div class="noFields">
+				<h4 class="noFields_title">Sorry, there are no chosen fields</h4>
+				<small>Click "Edit columns" to choose fields</small>
+			</div>
+		</ng-template>
+	</mat-sidenav>
+</mat-sidenav-container>

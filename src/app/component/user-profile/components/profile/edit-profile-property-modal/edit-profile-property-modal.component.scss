@@ -1,0 +1,17 @@
+:host {
+	form {
+		width: 100%;
+		> * {
+			width: 100%;
+		}
+
+		> .button-actions {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			> button + button {
+				margin-left: 16px;
+			}
+		}
+	}
+}

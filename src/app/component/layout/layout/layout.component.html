@@ -1,0 +1,46 @@
+<mat-toolbar>
+	<a class="links" [routerLink]="['/leads']" routerLinkActive="act">Leads</a>
+	<a class="links" [routerLink]="['/fields']" routerLinkActive="act">Fields list</a>
+	<a class="links" [routerLink]="['/dash']" routerLinkActive="act">Dashboard</a>
+
+	<span class="right">
+		<button mat-icon-button class="control" [routerLink]="['/user-preferences']">
+			<mat-icon>settings</mat-icon>
+		</button>
+	</span>
+	<mat-divider [vertical]="true" class="vertical divider"></mat-divider>
+
+	<button
+		mat-icon-button
+		[class.activePerson]="activePerson"
+		class="info"
+		[matMenuTriggerFor]="menu"
+		#menuTrigger="matMenuTrigger"
+		(mouseclick)="menuTrigger.openMenu()"
+	>
+		<mat-icon class="person" *ngIf="!userData?.photoURL; else image">person</mat-icon>
+		<ng-template #image>
+			<mat-icon class="person"><img src="{{ userData?.photoURL }}" width="24px" height="24px" /></mat-icon>
+		</ng-template>
+		<mat-icon class="arrow" [class.arrowActive]="activePerson">arrow_drop_down</mat-icon>
+	</button>
+
+	<mat-menu #menu="matMenu" [overlapTrigger]="false" class="user-menu">
+		<a mat-menu-item class="list" [routerLink]="['/user-preferences']" (blur)="focusable()" (focus)="focusable()">
+			<mat-icon class="person" *ngIf="!userData?.photoURL; else image">person</mat-icon>
+			<ng-template #image>
+				<mat-icon class="person"><img src="{{ userData?.photoURL }}" alt="{{ userData?.displayName }}" /></mat-icon>
+			</ng-template>
+
+			<div class="pers-info">
+				<div class="name">{{ userData?.displayName }}</div>
+				<div class="company">{{ userData?.companyName }}</div>
+				<div class="email">{{ userData?.email }}</div>
+				<div class="prof">Profile & Preferences</div>
+			</div>
+		</a>
+		<mat-divider class="divider"></mat-divider>
+		<a mat-menu-item class="out" href="/logout">Sign out </a>
+	</mat-menu>
+</mat-toolbar>
+<router-outlet></router-outlet>

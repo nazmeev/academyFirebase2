@@ -1,0 +1,73 @@
+<div class="form-container">
+	<div class="form-header">
+		<h1>Create your free account</h1>
+		<p>Already have an account? <a mat-button routerLink="/login">Sign In</a></p>
+	</div>
+	<div>
+		<button mat-button (click)="signUpGoogle()" [disabled]="buttonAuthDisabled" type="button" class="google-button">
+			Sign Up with Google
+		</button>
+	</div>
+	<div class="separator-block">
+		<span>OR</span>
+	</div>
+	<form [formGroup]="signupForm" autocomplete="off" (submit)="signUp()">
+		<mat-form-field class="form-field" appearance="outline">
+			<mat-label> Email </mat-label>
+			<input matInput formControlName="email" type="email" />
+			<mat-error *ngIf="email.touched && email.invalid">
+				<span *ngIf="email.errors.required">This field is required</span>
+				<span *ngIf="email.errors.email">Invalid email format</span>
+				<span *ngIf="email.errors.maxlength"
+					>Maximum {{ email.errors.maxlength.requiredLength }} characters required</span
+				>
+			</mat-error>
+		</mat-form-field>
+		<mat-form-field class="form-field" appearance="outline">
+			<mat-label> Password </mat-label>
+			<input
+				matInput
+				formControlName="password"
+				type="password"
+				[passwordInput]="passwordTypeTrigger._elementRef.nativeElement"
+			/>
+			<mat-icon #passwordTypeTrigger color="primary" class="small-icon" matSuffix>visibility_off</mat-icon>
+			<mat-error *ngIf="password.touched && password.invalid">
+				<span *ngIf="password.errors.required">This field is required</span>
+				<span *ngIf="password.errors.minlength"
+					>Minimum {{ password.errors.minlength.requiredLength }} characters required</span
+				>
+				<span *ngIf="password.errors.maxlength"
+					>Maximum {{ password.errors.maxlength.requiredLength }} characters required</span
+				>
+			</mat-error>
+		</mat-form-field>
+		<mat-form-field class="form-field" appearance="outline">
+			<mat-label> Name </mat-label>
+			<input matInput formControlName="displayName" type="text" [errorStateMatcher]="dirtyStateMatcher" />
+			<mat-error *ngIf="displayName.errors?.required">This field is required</mat-error>
+			<mat-error *ngIf="displayName.errors?.maxlength"
+				>Maximum {{ displayName.errors.maxlength.requiredLength }} characters required</mat-error
+			>
+		</mat-form-field>
+		<mat-form-field class="form-field" appearance="outline">
+			<mat-label> Company name </mat-label>
+			<input matInput formControlName="companyName" type="text" [errorStateMatcher]="dirtyStateMatcher" />
+			<mat-error *ngIf="companyName.errors?.required">This field is required</mat-error>
+			<mat-error *ngIf="companyName.errors?.maxlength"
+				>Maximum {{ companyName.errors.maxlength.requiredLength }} characters required</mat-error
+			>
+		</mat-form-field>
+		<div class="form-footer">
+			<button
+				[disabled]="signupForm.invalid || buttonAuthDisabled"
+				mat-raised-button
+				color="warn"
+				type="submit"
+				class="form-submit"
+			>
+				Sign Up
+			</button>
+		</div>
+	</form>
+</div>

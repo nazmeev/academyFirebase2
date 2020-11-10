@@ -1,0 +1,98 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+snack-bar-container {
+	&.mat-snack-bar-container {
+		&.alert-danger {
+			color: #721c24;
+			background-color: #f8d7da;
+			border-color: #f5c6cb;
+		}
+
+		&.alert-warning {
+			color: #856404;
+			background-color: #fff3cd;
+			border-color: #ffeeba;
+		}
+
+		&.alert-success {
+			color: #155724;
+			background-color: #d4edda;
+			border-color: #c3e6cb;
+		}
+	}
+}
+
+.mat-tooltip {
+	font-size: 0.75rem;
+}
+
+.crt-btn {
+	.mat-button-focus-overlay {
+		background-color: transparent;
+	}
+}
+
+.image-uploader-dialog mat-dialog-container {
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	app-image-uploader {
+		max-width: 100%;
+		.modal-container {
+			max-width: 100%;
+		}
+	}
+	@media (max-width: 464px) {
+		.mat-dialog-container {
+			padding: 0;
+		}
+	}
+}
+
+.j {
+	flex-direction: column;
+}
+
+.j *:not(input) {
+	pointer-events: all !important;
+}
+
+.cdk-overlay-container {
+	.user-menu {
+		max-width: none;
+		width: 288px;
+		position: absolute;
+		right: 0;
+		margin-top: 12px;
+		margin-right: 11px;
+		border: 1px solid #cbd6e2;
+	}
+}
+
+.small-icon {
+	color: #00a4bd;
+	font-size: 17px;
+	margin: 4px 7px;
+	padding-bottom: 4px;
+	cursor: pointer;
+}
+
+@media screen and (max-width: 1024px) {
+	.cdk-overlay-container {
+		.user-menu {
+			margin-right: 20px;
+			width: 223px;
+		}
+	}
+}

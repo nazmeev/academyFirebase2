@@ -1,0 +1,13 @@
+image: node:12.16.1
+
+pipelines:
+  custom: # Pipelines that are triggered manually
+    handle: # The name that is displayed in the list in the Bitbucket Cloud GUI
+      - step:
+          script:
+            - npm install
+            - npm run test
+            - npm run build:prod
+            - pipe: atlassian/firebase-deploy:0.3.0          
+              variables:
+               FIREBASE_TOKEN: '$FIREBASE_TOKEN_CI'

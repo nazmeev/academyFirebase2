@@ -1,0 +1,57 @@
+.head {
+	height: 88px;
+	padding-left: 48px;
+	padding-right: 48px;
+	display: flex;
+	align-items: center;
+}
+.head,
+.wrap {
+	font-family: Avenir Next W02, Helvetica, Arial, sans-serif;
+}
+h1,
+h2 {
+	text-align: center;
+	margin-bottom: 0;
+}
+
+.wrap {
+	margin-top: 10px;
+
+	height: 60%;
+}
+.loader {
+	z-index: 10;
+
+	margin-left: auto;
+	margin-right: auto;
+	border: 16px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 16px solid #3498db;
+	width: 120px;
+	height: 120px;
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+google-chart {
+	width: 90%;
+	height: 54vh;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+}
+mat-form-field {
+	margin-left: 48px;
+}
+
+.spin {
+	display: none;
+}

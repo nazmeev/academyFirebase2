@@ -1,0 +1,28 @@
+<div class="head">
+	<h1>Leads chart</h1>
+</div>
+<mat-divider></mat-divider>
+<h2>Quantity of leads</h2>
+
+<div class="wrap">
+	<div class="loader" [class.spin]="spin"></div>
+	<google-chart
+		class="chart"
+		[class.spin]="!spin"
+		[type]="chartType"
+		[data]="chartData"
+		[columns]="chartColumnNames"
+		[options]="options"
+		[width]="width"
+		[height]="height"
+	>
+	</google-chart>
+	<mat-form-field [class.spin]="!spin" appearance="fill">
+		<mat-label>Choose a period (days): </mat-label>
+		<mat-select [(value)]="period" (selectionChange)="updateData($event)">
+			<mat-option value="7">7</mat-option>
+			<mat-option value="30">30</mat-option>
+			<mat-option value="90">90</mat-option>
+		</mat-select>
+	</mat-form-field>
+</div>

@@ -1,0 +1,63 @@
+<form [formGroup]="form">
+	<ng-container [ngSwitch]="property">
+		<mat-form-field *ngSwitchCase="'displayName'">
+			<input formControlName="displayName" matInput placeholder="Name" type="text" />
+			<mat-error *ngIf="formError('displayName', 'required')">Name is required</mat-error>
+		</mat-form-field>
+		<mat-form-field *ngSwitchCase="'companyName'">
+			<input formControlName="companyName" matInput placeholder="Company name" type="text" />
+			<mat-error *ngIf="formError('companyName', 'maxlength')">Company name is too long</mat-error>
+		</mat-form-field>
+
+		<mat-form-field *ngSwitchCase="'email'">
+			<input formControlName="email" matInput placeholder="Email" type="text" />
+			<mat-error *ngIf="formError('email', 'required')">Email is required</mat-error>
+			<mat-error *ngIf="formError('email', 'email')">Email is invalid</mat-error>
+			<mat-error *ngIf="formError('email', 'maxlength')">Email is too long</mat-error>
+		</mat-form-field>
+
+		<ng-container *ngSwitchCase="'password'">
+			<mat-form-field>
+				<input
+					[passwordInput]="passwordTypeTrigger._elementRef.nativeElement"
+					formControlName="password"
+					matInput
+					placeholder="Old Password"
+					type="password"
+				/>
+				<mat-icon #passwordTypeTrigger class="small-icon" matSuffix>visibility_off</mat-icon>
+				<mat-error *ngIf="formError('password', 'required')">Password is required</mat-error>
+			</mat-form-field>
+			<mat-form-field>
+				<input
+					[passwordInput]="newPasswordTypeTrigger._elementRef.nativeElement"
+					formControlName="newPassword"
+					matInput
+					placeholder="New Password"
+					type="password"
+				/>
+				<mat-icon #newPasswordTypeTrigger class="small-icon" matSuffix>visibility_off</mat-icon>
+				<mat-error *ngIf="formError('newPassword', 'required')">Password is required</mat-error>
+				<mat-error *ngIf="formError('newPassword', 'minlength')">Password is too short</mat-error>
+				<mat-error *ngIf="formError('newPassword', 'maxlength')">Password is too long</mat-error>
+			</mat-form-field>
+			<mat-form-field>
+				<input
+					[passwordInput]="confirmPasswordTypeTrigger._elementRef.nativeElement"
+					formControlName="confirmNewPassword"
+					matInput
+					placeholder="Confirm New Password"
+					type="password"
+				/>
+				<mat-icon #confirmPasswordTypeTrigger class="small-icon" matSuffix>visibility_off</mat-icon>
+				<mat-error *ngIf="formError('confirmNewPassword', 'notSame')">Passwords do not match</mat-error>
+				<mat-error *ngIf="formError('confirmNewPassword', 'required')">Password is required</mat-error>
+			</mat-form-field>
+		</ng-container>
+	</ng-container>
+
+	<div class="button-actions">
+		<button (click)="save()" [disabled]="form.invalid" class="modal-save" color="warn" mat-flat-button>Save</button>
+		<button (click)="dialogRef.close()" class="modal-cancel" color="warn" mat-stroked-button>Cancel</button>
+	</div>
+</form>

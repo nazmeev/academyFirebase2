@@ -1,0 +1,49 @@
+<section>
+	<div class="title-container">
+		<h1>Settings</h1>
+	</div>
+	<mat-divider></mat-divider>
+	<div class="profile-container">
+		<div class="profile-info">
+			<h2>Across all accounts</h2>
+			<div class="profile-info-container">
+				<div [style.backgroundImage]="'url(' + userData?.photoURL + ')'" class="profile-image-container">
+					<mat-menu #editImg="matMenu" class="my-class">
+						<button (click)="openImageModal()" mat-menu-item type="button">Edit image</button>
+						<button (click)="setDefaultImg()" mat-menu-item type="button">Remove image</button>
+					</mat-menu>
+					<mat-icon [matMenuTriggerFor]="editImg">edit</mat-icon>
+				</div>
+				<div class="profile-edit">
+					<div class="profile-edit-item">
+						<h3>{{ userData?.displayName }}</h3>
+						<button (click)="openEditModal('displayName')" mat-icon-button>
+							<mat-icon class="small-icon">edit </mat-icon>
+						</button>
+					</div>
+					<div class="profile-edit-item">
+						<h3>{{ userData?.companyName || 'Add your company Name' }}</h3>
+						<button (click)="openEditModal('companyName')" mat-icon-button>
+							<mat-icon class="small-icon">{{ userData?.companyName ? 'edit' : 'add' }} </mat-icon>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="showSecurityOptions" class="security-container">
+				<h2>Security</h2>
+				<div>
+					<span>Email</span>
+					<button (click)="openEditModal('email')" mat-icon-button>
+						<mat-icon class="small-icon">edit</mat-icon>
+					</button>
+				</div>
+				<div>
+					<span>Password</span>
+					<button (click)="openEditModal('password')" mat-icon-button>
+						<mat-icon class="small-icon">edit</mat-icon>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
